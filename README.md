@@ -41,8 +41,13 @@ $ python3 ./src/main.py
 ```
 Luego se mostrara un menu con la lista de paises disponibles para consultar el indice GINI. Se debe pueden seleccionar diferentes paises y se mostraran los mismos en pantalla, con su valor redondeado a entero.
 
+<p align="center">
+  <img src="./imgs/sequence_diagram.drawio.png" alt="Diagrama de secuencias"><br>
+  <ei>Fig 1. Diagrama de secuencias.</em>
+</p>
+
 ---
 
-[JSON con paises y su alpha-3 code](https://github.com/stefangabos/world_countries/tree/master)
+[World countries json](https://github.com/stefangabos/world_countries/tree/master)
 
-[Informe](https://docs.google.com/document/d1jW9MoEiCJ7JhiNN3AmMY-2FMexjHuQbrLYXATDKkyik/edit?usp=sharing)
+[Informe del desarrollo](https://docs.google.com/document/d1jW9MoEiCJ7JhiNN3AmMY-2FMexjHuQbrLYXATDKkyik/edit?usp=sharing)
