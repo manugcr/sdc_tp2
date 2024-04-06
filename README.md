@@ -32,6 +32,12 @@ $ pip3 install ctypes
 $ pip3 install tkinter
 ```
 
+En caso de que falle la instalación de la librería tkinter, se puede probar en sistemas operativos basados en Debian el siguiente comando:
+
+```bash
+$ sudo apt install python3-tk
+```
+
 ---
 
 ## Ejecucion
