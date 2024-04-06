@@ -23,3 +23,4 @@ echo "  -> Compiling the object file into a shared library"
 gcc -shared -W -o ./include/libgini.so ./build/gini_manipulation_c.o
 
 echo "  -> Compilation successful lib at ./include/"
+echo "  -> Execute script with launch.sh"

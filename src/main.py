@@ -106,7 +106,7 @@ def create_gui():
     result_label = tk.Label(root, text="", font=("Helvetica", 12))
     result_label.pack()
 
-    button_calculate = tk.Button(root, text="Get GINI Indices", command=calculate_gini)
+    button_calculate = tk.Button(root, text="Get GINI", command=calculate_gini)
     button_calculate.pack()
 
     root.mainloop()
