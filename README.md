@@ -110,5 +110,3 @@ En este fragmento de codigo se carga la libreria utilizando ctypes y se definen 
 ---
 
 [World countries json](https://github.com/stefangabos/world_countries/tree/master)
-
-[Informe del desarrollo](https://docs.google.com/document/d1jW9MoEiCJ7JhiNN3AmMY-2FMexjHuQbrLYXATDKkyik/edit?usp=sharing)
