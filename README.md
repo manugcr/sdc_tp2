@@ -9,24 +9,27 @@ Se debe diseñar e implementar una interfaz que muestre el índice GINI. La capa
 
 Se debe utilizar el stack para convocar, enviar parámetros y devolver resultados. O sea utilizar las convenciones de llamadas de lenguajes de alto nivel a bajo nivel.
 
-En una primera iteración resolverán todo el trabajo práctico usando c con python sin ensamblador. En la siguiente iteración usarán los conocimientos de ensamblador para completar el tp.
+**En una primera iteración resolverán todo el trabajo práctico usando C con Python sin ensamblador. En la siguiente iteración usarán los conocimientos de ensamblador para completar el tp.**
 
-**IMPORTANTE: en esta segunda iteración deberán mostrar los resultados con gdb, para ello pueden usar un programa de C puro. Cuando depuren muestran el estado del área de memoria que contiene el stack antes, durante y después de la función.**
+IMPORTANTE: en esta segunda iteración deberán mostrar los resultados con gdb, para ello pueden usar un programa de C puro. Cuando depuren muestran el estado del área de memoria que contiene el stack antes, durante y después de la función.
 
 ---
 
 ## Requerimientos
 
-Para poder ejecutar el programa se necesita tener instalado Python 3.7+ y gcc para poder compilar la libreria en C. Tambien para la segunda etapa del proyecto se necesita tener instalado gdb y nasm para poder compilar el codigo en assembler. Aun que estas herramientas estan instaladas por defecto en la mayoria de los sistemas operativos, se puede instalar con los siguientes comandos.
+Para poder ejecutar el programa se necesita tener instalado Python 3.7+ y GCC para poder compilar la libreria en C. Para la segunda etapa del proyecto se necesita tener instalado gdb y nasm para poder compilar el codigo en assembler. Aun que estas herramientas estan instaladas por defecto en la mayoria de los sistemas operativos, se puede instalar con los siguientes comandos:
 
 ```bash
-sudo apt install build-essential nasm gcc-multilib g++-multilib
+$ sudo apt install build-essential nasm gcc-multilib g++-multilib
 ```
 
-Las librerias de python necesarias `ctypes`, `tkinter` y `json` son modulos que vienen por defecto en la instalacion de Python. Pero para hacer los requests a la REST API se necesita instalar la libreria `requests`.
+Las librerias de python necesarias `ctypes`, `tkinter`, `json` y `request` son modulos que vienen por defecto en la instalacion de Python. Pero si no estan instalados se pueden instalar con los siguientes comandos:
 
 ```bash
 $ pip3 install requests
+$ pip3 install json
+$ pip3 install ctypes
+$ pip3 install tkinter
 ```
 
 ---
@@ -36,14 +39,20 @@ $ pip3 install requests
 En esta primera parte de la implementacion solamente se utilizo Python y una libreria un C, mediante ctypes, para realizar la conversion de float a entero. Para ejecutar el programa se debe correr el siguiente comando desde la carpeta root del proyecto.
 
 ```bash
-$ sh build.sh
-$ python3 ./src/main.py
+~/sdc_tp2$ sh build.sh
+~/sdc_tp2$ sh launch.sh
+    -> Executing script ...
 ```
 Luego se mostrara un menu con la lista de paises disponibles para consultar el indice GINI. Se debe pueden seleccionar diferentes paises y se mostraran los mismos en pantalla, con su valor redondeado a entero.
 
 <p align="center">
   <img src="./imgs/sequence_diagram.drawio.png" alt="Diagrama de secuencias"><br>
   <ei>Fig 1. Diagrama de secuencias.</em>
+</p>
+
+<p align="center">
+  <img src="./imgs/exec.png" alt="Ejemplo de ejecucion"><br>
+  <ei>Fig 2. Ejemplo de ejecucion.</em>
 </p>
 
 ---
