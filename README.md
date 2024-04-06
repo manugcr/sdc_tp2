@@ -56,10 +56,56 @@ Luego se mostrara un menu con la lista de paises disponibles para consultar el i
   <ei>Fig 1. Diagrama de secuencias.</em>
 </p>
 
+Como vemos en el diagrama de ejecucion, se implemento una libreria en C que se encarga de realizar la conversion de float a entero. Esta libreria se compila y se carga en memoria para poder ser utilizada por el script de Python. 
+
+Una vez que se carga la libreria, desde python se creo una GUI con `tkinter` para poder seleccionar el pais a consultar. Seleccionado el pais, se realiza la consulta a la API de WorldBank y se obtiene el indice GINI del pais seleccionado. Luego se llama a la funcion de la libreria en C para realizar la conversion de float a entero y se muestra el resultado en pantalla.
+
+Para mayor comodidad a la hora de elegir el pais, se implemento un json con la lista de paises y sus respectivos codigos de pais. De esta forma se puede seleccionar el pais por su nombre y se obtiene el codigo de pais para realizar la consulta a la API, sin necesidad de tener que escribir el pais a buscar.
+
 <p align="center">
   <img src="./imgs/exec.png" alt="Ejemplo de ejecucion"><br>
   <ei>Fig 2. Ejemplo de ejecucion.</em>
 </p>
+
+---
+
+## API REST
+Una API REST es una interfaz que opera sobre el protocolo HTTP, utilizando sus métodos estándar (GET, POST, PUT, DELETE) para realizar operaciones sobre recursos específicos. Estos recursos pueden ser datos, servicios o cualquier otro elemento que la API proporcione acceso.
+
+En este caso entre el sistema de WorldBank y el sistema de la aplicacion. La misma permite realizar consultas a la base de datos y obtener la informacion de los paises y sus indices.
+
+Funcionalidades de las API Rest:
+- **GET**: Se emplea para solicitar datos de recursos específicos. En el contexto de WorldBank, podría ser utilizado para obtener información sobre los índices GINI de diversos países.
+- **POST**: Se utiliza para enviar informacion a la base de datos.
+- **PUT**: Se utiliza para actualizar informacion en la base de datos.
+- **DELETE**: Se utiliza para eliminar informacion de la base de datos.
+
+En este caso se utilizo el metodo GET para obtener la informacion de los paises y sus indices GINI. La informacion se obtuvo en formato JSON y se parseo para obtener los datos necesarios, ya que se obtiene una lista de paises con sus respectivos indices, y a su vez una lista con los diferentes indices de cada año. Pero para evitar la complejidad de tener que seleccionar el año, se selecciono el indice mas actual para mostrar en pantalla.
+
+---
+## Libreria en C
+Un archivo `.so` es un archivo de biblioteca compartida, que contiene funciones que pueden ser utilizadas por otros programas. Estos archivos son similares a los archivos `.dll` en Windows, y se utilizan para cargar funciones en memoria y poder utilizarlas en otros programas.
+
+Para poder utilizar una libreria en C desde Python se utilizo la libreria `ctypes`. Esta libreria permite cargar una libreria en C en memoria y poder utilizar las funciones de la misma desde Python. Para ello primero se debe compilar el codigo en C en un archivo `.so` en sistemas linux (`.dll` en sistemas windows). 
+
+```bash
+gcc -c -Wall -Werror -fpic ./src/gini_manipulation.c -o ./build/gini_manipulation_c.o
+gcc -shared -W -o ./include/libgini.so ./build/gini_manipulation_c.o
+```
+
+Estos comandos generan el archivo compartido `libgini.so` que contiene las funcionalidades del codigo en C.
+
+```python
+import ctypes
+
+# Carga de la biblioteca
+libgini = ctypes.CDLL('./include/libgini.so')
+
+# Definición de los tipos de argumentos y el tipo de retorno de la función C
+libgini._gini_manipulation.argtypes = [ctypes.c_float]
+libgini._gini_manipulation.restype = ctypes.c_int
+```
+En este fragmento de codigo se carga la libreria utilizando ctypes y se definen los tipos de argumentos y el tipo de retorno de la funcion en C. De esta forma se puede utilizar la funcion de la libreria en C desde Python.
 
 ---
 
