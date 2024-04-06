@@ -29,6 +29,12 @@ Las librerias de python necesarias `ctypes`, `tkinter` y `json` son modulos que 
 $ pip3 install requests
 ```
 
+En caso de que falle la instalación de la librería tkinter, se puede probar en sistemas operativos basados en Debian el siguiente comando:
+
+```bash
+$ sudo apt install python3-tk
+```
+
 ---
 
 ## Ejecucion
