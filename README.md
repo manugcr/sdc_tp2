@@ -108,5 +108,43 @@ libgini._gini_manipulation.restype = ctypes.c_int
 En este fragmento de codigo se carga la libreria utilizando ctypes y se definen los tipos de argumentos y el tipo de retorno de la funcion en C. De esta forma se puede utilizar la funcion de la libreria en C desde Python.
 
 ---
+## Profiling de la aplicacion
+El profiling es una técnica que se utiliza para analizar el rendimiento de un programa y determinar qué partes del código consumen más recursos y cuáles son las que más tiempo tardan en ejecutarse. 
 
-[World countries json](https://github.com/stefangabos/world_countries/tree/master)
+En nuestro trabajo se utilizo una llamada a funcion desde una libreria en C sobre Python, con el proposito de mejorar el rendimiento de la aplicacion. Para poder analizar el rendimiento de la aplicacion se utilizo la libreria `timeit` de Python, la cual toma los tiempos de ejecucion de una funcion y los muestra en pantalla.
+
+Como nuestra aplicacion principal se ejecuta desde Python, nos parecio correcto hacer esta medicion sobre el python mismo, y no compararla directamente con la libreria de C.
+
+Para ello creamos una funcion en Python que simula la conversion de un float a un entero, y luego se ejecuta la funcion de conversion de la libreria en C. Se toman los tiempos de ejecucion de ambas funciones y se muestran en pantalla.
+
+```python
+# Python equivalent of the C function
+def gini_manipulation(gini_index):
+    gini_index_int = int(gini_index)
+    return gini_index_int + 1
+```
+
+```c
+// C function imported as a .so library.
+int _gini_manipulation(float gini_index) 
+{
+    int gini_index_int = (int)gini_index;
+    return gini_index_int + 1;
+}
+```
+
+Al correr el script de profiling se obtienen los siguientes resultados:
+
+```bash
+~/sdc_tp2$ python3 ./profiling/profiling.py 
+  Time taken by C code: 0.5089660679986991
+  Time taken by Python code: 0.182436916998995
+
+```
+
+Como podemos observar los tiempos de ejecucion de la funcion en C es mayor que la funcion en Python, al contrario de lo que se esperaba. Pero creemos que esto se debe a que llamar a una funcion en C desde Python tiene un overhead mayor que llamar a una funcion en Python directamente. Aun asi, la diferencia de tiempos no es tan significativa, y para algun otro caso en donde se deban hacer calculos mas complejos, el tiempo de ejecucion en C a pesar de ser llamado desde Python puede ser mucho menor.
+
+---
+## Informacion externa utilizada
+
+- [World countries json](https://github.com/stefangabos/world_countries/tree/master)
