@@ -1,3 +1,18 @@
+# ------------------------------------------------------------------------------------------------------------------
+# File: main.py
+# Author:   Gil Cernich, Manuel
+#           Pallardo, Agustin
+#           Saporito, Franco
+# Date: 2024-04-08
+# Description:  This scripts fetches the GINI index of selected countries and provides a GUI to display the data.
+#               Once the GINI index is obtained a C function is called from this python script to make some data 
+#               processing with assembly and the final value is returned to the GUI.
+#
+# Data sources: 
+# - World Bank API: https://api.worldbank.org/v2/en/
+# - Countries JSON: https://github.com/stefangabos/world_countries/tree/master
+# ------------------------------------------------------------------------------------------------------------------
+
 import json
 import requests
 import ctypes
