@@ -1,6 +1,13 @@
 # Sistemas de Computacion
 Trabajo Practico 2 - Sistemas de Computacion 
 
+## Stack frame
+
+**Integrantes:**
+- [Gil Cernich, Manuel](https://github.com/manugcr/)
+- [Pallardo, Agustin](https://github.com/djpallax)
+- [Saporito, Franco](https://github.com/fasaporito)
+
 ---
 
 ## Objetivo
@@ -20,22 +27,23 @@ IMPORTANTE: en esta segunda iteración deberán mostrar los resultados con gdb, 
 Para poder ejecutar el programa se necesita tener instalado Python 3.7+ y GCC para poder compilar la libreria en C. Para la segunda etapa del proyecto se necesita tener instalado gdb y nasm para poder compilar el codigo en assembler. Aun que estas herramientas estan instaladas por defecto en la mayoria de los sistemas operativos, se puede instalar con los siguientes comandos:
 
 ```bash
-$ sudo apt install build-essential nasm gcc-multilib g++-multilib
+~$ sudo apt install build-essential nasm gcc-multilib g++-multilib
 ```
 
-Las librerias de python necesarias `ctypes`, `tkinter`, `json` y `request` son modulos que vienen por defecto en la instalacion de Python. Pero si no estan instalados se pueden instalar con los siguientes comandos:
+Las librerias de python necesarias `ctypes`, `tkinter`, `json`, `matplot` `request` son modulos que vienen por defecto en la instalacion de Python. Pero si no estan instalados se pueden instalar con los siguientes comandos:
 
 ```bash
-$ pip3 install requests
-$ pip3 install json
-$ pip3 install ctypes
-$ pip3 install tkinter
+~$ pip3 install requests
+~$ pip3 install json
+~$ pip3 install ctypes
+~$ pip3 install tkinter
+~$ pip3 install matplotlib
 ```
 
 En caso de que falle la instalación de la librería tkinter, se puede probar en sistemas operativos basados en Debian el siguiente comando:
 
 ```bash
-$ sudo apt install python3-tk
+~$ sudo apt install python3-tk
 ```
 
 ---
@@ -47,7 +55,9 @@ En esta primera parte de la implementacion solamente se utilizo Python y una lib
 ```bash
 ~/sdc_tp2$ sh build.sh
 ~/sdc_tp2$ sh launch.sh
+
     -> Executing script ...
+
 ```
 Luego se mostrara un menu con la lista de paises disponibles para consultar el indice GINI. Se debe pueden seleccionar diferentes paises y se mostraran los mismos en pantalla, con su valor redondeado a entero.
 
@@ -80,6 +90,15 @@ Funcionalidades de las API Rest:
 - **PUT**: Se utiliza para actualizar informacion en la base de datos.
 - **DELETE**: Se utiliza para eliminar informacion de la base de datos.
 
+Codigos de respuesta:
+- **200**: OK. La solicitud ha tenido éxito.
+- **201**: Creado. La solicitud ha tenido éxito y se ha creado un nuevo recurso como resultado.
+- **400**: Solicitud incorrecta. La solicitud no se pudo procesar debido a un error del cliente.
+- **401**: No autorizado. El cliente debe autenticarse para obtener la respuesta solicitada.
+- **404**: No encontrado. El servidor no pudo encontrar el recurso solicitado.
+- **500**: Error interno del servidor. El servidor ha encontrado una situación inesperada que le impide cumplir con la solicitud.
+
+
 En este caso se utilizo el metodo GET para obtener la informacion de los paises y sus indices GINI. La informacion se obtuvo en formato JSON y se parseo para obtener los datos necesarios, ya que se obtiene una lista de paises con sus respectivos indices, y a su vez una lista con los diferentes indices de cada año. Pero para evitar la complejidad de tener que seleccionar el año, se selecciono el indice mas actual para mostrar en pantalla.
 
 ---
@@ -89,8 +108,8 @@ Un archivo `.so` es un archivo de biblioteca compartida, que contiene funciones 
 Para poder utilizar una libreria en C desde Python se utilizo la libreria `ctypes`. Esta libreria permite cargar una libreria en C en memoria y poder utilizar las funciones de la misma desde Python. Para ello primero se debe compilar el codigo en C en un archivo `.so` en sistemas linux (`.dll` en sistemas windows). 
 
 ```bash
-gcc -c -Wall -Werror -fpic ./src/gini_manipulation.c -o ./build/gini_manipulation_c.o
-gcc -shared -W -o ./include/libgini.so ./build/gini_manipulation_c.o
+~$ gcc -c -Wall -Werror -fpic ./src/gini_manipulation.c -o ./build/gini_manipulation_c.o
+~$ gcc -shared -W -o ./include/libgini.so ./build/gini_manipulation_c.o
 ```
 
 Estos comandos generan el archivo compartido `libgini.so` que contiene las funcionalidades del codigo en C.
@@ -143,6 +162,10 @@ Al correr el script de profiling se obtienen los siguientes resultados:
 ```
 
 Como podemos observar los tiempos de ejecucion de la funcion en C es mayor que la funcion en Python, al contrario de lo que se esperaba. Pero creemos que esto se debe a que llamar a una funcion en C desde Python tiene un overhead mayor que llamar a una funcion en Python directamente. Aun asi, la diferencia de tiempos no es tan significativa, y para algun otro caso en donde se deban hacer calculos mas complejos, el tiempo de ejecucion en C a pesar de ser llamado desde Python puede ser mucho menor.
+
+---
+## TO DO
+Para la segunda parte del informe se buscara implementar la conversion de float a entero en ensamblador, y se comparara el rendimiento de la aplicacion con la conversion en C y en Python.
 
 ---
 ## Informacion externa utilizada
