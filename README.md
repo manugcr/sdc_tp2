@@ -21,6 +21,8 @@ En una primera iteración resolverán todo el trabajo práctico usando C con Pyt
 **IMPORTANTE: en esta segunda iteración deberán mostrar los resultados con gdb, para ello pueden usar un programa de C puro. Cuando depuren muestran el estado del área de memoria que contiene el stack antes, durante y después de la función.**
 
 ---
+## Requerimientos
+
 ### Enviroment
 En este trabajo buscamos compilar assembler x86 de 32bits sobre Python 3.7 de 64bits, lo cual no es compatible. Una posible solucion encontrada es utilizar un enviroment gracias a conda, la cual nos permite crear y gestionar entornos de desarrollo independientes, lo que facilita trabajar con diferentes versiones de paquetes y dependencias sin conflictos.
 
@@ -33,14 +35,13 @@ bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
 rm -rf ~/miniconda3/miniconda.sh
 ```
 
-Luego de instalarlo hay que agregar la ruta `export PATH="/home/usr/miniconda3/bin:$PATH"` al PATH del sistema:
+Luego de instalarlo hay que agregar la ruta al PATH del sistema, para que se pueda acceder a los comandos de conda desde cualquier lugar. Para ello se debe agregar a `.bashrc` la linea `export PATH="/home/usr/miniconda3/bin:$PATH"`. Una vez agregado se debe actualizar el archivo de configuracion:
 
 ```bash
-usr@hostname:~$ .bashrc
 usr@hostname:~$ source ~/.bashrc
 ```
 
-Una vez instalado miniconda, se debe crear un enviroment con la version de Python 3.7 32bits y activarlo:
+Ya instalado miniconda, se debe crear un enviroment con la version de Python 3.7 32bits y activarlo:
 
 ```bash
 (base) usr@hostname:~$ conda create -n py32 python=3.7 -c https://repo.anaconda.com/pkgs/main/linux-32/ --override-channels
@@ -53,8 +54,6 @@ Podemos corroborar que nuestro enviroment esta bien configurado ejecutando el si
 (py32) usr@hostname:~$ python -c "import platform; print(platform.architecture())"
 ('32bit', 'ELF')
 ```
-
-## Requerimientos
 
 ### Librerias
 Para poder ejecutar el programa se necesita tener instalado Python 3.7+ y GCC para poder compilar la libreria en C. Para la segunda etapa del proyecto se necesita tener instalado gdb y nasm para poder compilar el codigo en assembler. Aun que estas herramientas estan instaladas por defecto en la mayoria de los sistemas operativos, se puede instalar con los siguientes comandos:
@@ -110,6 +109,8 @@ Para mayor comodidad a la hora de elegir el pais, se implemento un json con la l
   <ei>Fig 2. Ejemplo de ejecucion.</em>
 </p>
 
+# **...(Completar y arreglar)**
+
 ---
 
 ## API REST
@@ -136,28 +137,31 @@ En este caso se utilizo el metodo GET para obtener la informacion de los paises 
 
 ---
 ## Libreria en C
-Un archivo `.so` es un archivo de biblioteca compartida, que contiene funciones que pueden ser utilizadas por otros programas. Estos archivos son similares a los archivos `.dll` en Windows, y se utilizan para cargar funciones en memoria y poder utilizarlas en otros programas.
+Un archivo `.so` es un archivo de biblioteca compartida, que contiene funciones que pueden ser utilizadas por otros programas, estos archivos son similares a los archivos `.dll` en Windows.
 
-Para poder utilizar una libreria en C desde Python se utilizo la libreria `ctypes`. Esta libreria permite cargar una libreria en C en memoria y poder utilizar las funciones de la misma desde Python. Para ello primero se debe compilar el codigo en C en un archivo `.so` en sistemas linux (`.dll` en sistemas windows). 
+Para poder utilizar una libreria en C desde Python se utilizo la libreria `ctypes`. Esta libreria permite cargar una libreria en C en memoria y poder utilizar las funciones de la misma desde Python. Para ello primero se debe compilar el codigo en C en un archivo `.so` en sistemas linux. Para ello se utilizo el script en bash `build.sh` que ejecuta los siguientes comandos:
 
 ```bash
-~$ gcc -c -Wall -Werror -fpic ./src/gini_manipulation.c -o ./build/gini_manipulation_c.o
-~$ gcc -shared -W -o ./include/libgini.so ./build/gini_manipulation_c.o
+# Compiling the C code into an object file.
+gcc -c -m32 -Wall -Werror -fpic ./src/gini_manipulation.c -o ./build/gini_manipulation_c.o
+
+# Assemble the asm file into and object file.
+nasm -f elf32 ./src/gini_manipulation_asm.asm -o ./build/gini_manipulation_asm.o
+
+# Link both object files into a shared library.
+gcc -m32 -shared -o ./include/libgini.so ./build/gini_manipulation_c.o ./build/gini_manipulation_asm.o
 ```
 
-Estos comandos generan el archivo compartido `libgini.so` que contiene las funcionalidades del codigo en C.
+Como dijimos anteriormente, la libreria en C se encarga de llamar a una rutina en assembler 32bits, por ello se necesito de nasm y se utilizo la flag `-m32`.
+
+Luego para linkear nuestra libreria `libgini.so` con el script de Python, se deben definir los tipos de entrada y retorno de la funcion en C.
 
 ```python
 import ctypes
-
-# Carga de la biblioteca
 libgini = ctypes.CDLL('./include/libgini.so')
-
-# Definición de los tipos de argumentos y el tipo de retorno de la función C
 libgini._gini_manipulation.argtypes = [ctypes.c_float]
 libgini._gini_manipulation.restype = ctypes.c_int
 ```
-En este fragmento de codigo se carga la libreria utilizando ctypes y se definen los tipos de argumentos y el tipo de retorno de la funcion en C. De esta forma se puede utilizar la funcion de la libreria en C desde Python.
 
 ---
 ## Profiling de la aplicacion
@@ -177,7 +181,7 @@ def gini_manipulation(gini_index):
 ```
 
 ```c
-// C function imported as a .so library.
+// C function 
 int _gini_manipulation(float gini_index) 
 {
     int gini_index_int = (int)gini_index;
@@ -185,16 +189,43 @@ int _gini_manipulation(float gini_index)
 }
 ```
 
-Al correr el script de profiling se obtienen los siguientes resultados:
+```asm
+; Assembler function
+section .text
+    global gini_manipulation_asm
+
+gini_manipulation_asm:
+    push ebp
+    mov ebp, esp
+
+    ; Convert float to int
+    fld dword [ebp+8]
+    fistp dword [ebp-4]
+
+    ; Add 1 to the integer
+    mov eax, dword [ebp-4]
+    add eax, 1
+
+    ; Exit
+    mov esp, ebp
+    pop ebp
+    ret    
+```
+
+Al correr el script de profiling para que convierta el numero 42.3 por 1.000.000 de veces consecutivas se obtienen los siguientes resultados:
 
 ```bash
 ~/sdc_tp2$ python3 ./profiling/profiling.py 
-  Time taken by C code: 0.5089660679986991
-  Time taken by Python code: 0.182436916998995
-
+  Time taken by C+asm code: 0.698672358004842
+  Time taken by C code: 0.7135395390214399
+  Time taken by Python code: 0.2677964539907407
 ```
 
-Como podemos observar los tiempos de ejecucion de la funcion en C es mayor que la funcion en Python, al contrario de lo que se esperaba. Pero creemos que esto se debe a que llamar a una funcion en C desde Python tiene un overhead mayor que llamar a una funcion en Python directamente. Aun asi, la diferencia de tiempos no es tan significativa, y para algun otro caso en donde se deban hacer calculos mas complejos, el tiempo de ejecucion en C a pesar de ser llamado desde Python puede ser mucho menor.
+Como podemos observar los tiempos de ejecucion de la funcion en C es mayor que la funcion en Python, al contrario de lo que se esperaba. Pero creemos que esto se debe a que llamar a una funcion en C desde Python tiene un overhead mayor que llamar a una funcion en Python directamente. 
+
+Tambien se puede observar que la funcion en assembler es mas rapida que la funcion en C, lo cual era lo esperado, ya que el assembler es un lenguaje de bajo nivel y se ejecuta directamente sobre el hardware, mientras que el C es un lenguaje de mas alto nivel y necesita ser compilado.
+
+# **...(Completar y arreglar)**
 
 ---
 ## TO DO
