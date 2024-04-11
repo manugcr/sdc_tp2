@@ -23,7 +23,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 
 # Load the library and define the argument and return types of the C function
-libgini = ctypes.CDLL('./include/libgini.so')
+libgini = ctypes.CDLL('./include/libgini_asm.so')
 libgini._gini_manipulation.argtypes = [ctypes.c_float]
 libgini._gini_manipulation.restype = ctypes.c_int
 

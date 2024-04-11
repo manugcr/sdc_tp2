@@ -17,3 +17,11 @@ int _gini_manipulation(float gini_index)
     /* Call the assembly function */
     return gini_manipulation_asm(gini_index);
 }
+
+
+// // Pure C code
+// int _gini_manipulation(float gini_index) 
+// {
+//     int gini_index_int = (int)gini_index;
+//     return gini_index_int + 1;
+// }
