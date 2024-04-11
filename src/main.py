@@ -16,6 +16,7 @@
 import json
 import requests
 import ctypes
+
 import tkinter as tk
 from tkinter import messagebox
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -159,7 +160,8 @@ def create_gui():
     # Add margin and padding to the listbox
     listbox_frame = tk.Frame(root, padx=20, pady=20)
     listbox_frame.pack(fill=tk.BOTH, expand=True)  # Fill entire space
-    listbox = tk.Listbox(listbox_frame, selectmode=tk.MULTIPLE)
+    listbox_font = ('Helvetica', 14, 'bold')  # Set the font family and size
+    listbox = tk.Listbox(listbox_frame, selectmode=tk.MULTIPLE, font=listbox_font)  # Apply font to listbox
     for country in countries:
         listbox.insert(tk.END, country['name'])
     listbox.pack(fill=tk.BOTH, expand=True)  # Fill entire space
@@ -174,6 +176,7 @@ def create_gui():
     root.protocol("WM_DELETE_WINDOW", on_closing)
 
     root.mainloop()
+
 
 
 # @brief Handle the window closing event.

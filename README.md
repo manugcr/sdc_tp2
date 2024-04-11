@@ -16,14 +16,47 @@ Se debe diseñar e implementar una interfaz que muestre el índice GINI. La capa
 
 Se debe utilizar el stack para convocar, enviar parámetros y devolver resultados. O sea utilizar las convenciones de llamadas de lenguajes de alto nivel a bajo nivel.
 
-**En una primera iteración resolverán todo el trabajo práctico usando C con Python sin ensamblador. En la siguiente iteración usarán los conocimientos de ensamblador para completar el tp.**
+En una primera iteración resolverán todo el trabajo práctico usando C con Python sin ensamblador. En la siguiente iteración usarán los conocimientos de ensamblador para completar el tp.
 
-IMPORTANTE: en esta segunda iteración deberán mostrar los resultados con gdb, para ello pueden usar un programa de C puro. Cuando depuren muestran el estado del área de memoria que contiene el stack antes, durante y después de la función.
+**IMPORTANTE: en esta segunda iteración deberán mostrar los resultados con gdb, para ello pueden usar un programa de C puro. Cuando depuren muestran el estado del área de memoria que contiene el stack antes, durante y después de la función.**
 
 ---
+### Enviroment
+En este trabajo buscamos compilar assembler x86 de 32bits sobre Python 3.7 de 64bits, lo cual no es compatible. Una posible solucion encontrada es utilizar un enviroment gracias a conda, la cual nos permite crear y gestionar entornos de desarrollo independientes, lo que facilita trabajar con diferentes versiones de paquetes y dependencias sin conflictos.
+
+Para instalarla se puede seguir los siguientes pasos para un sistema linux, encontrados en la [pagina oficial](https://docs.anaconda.com/free/miniconda/):
+
+```bash
+mkdir -p ~/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm -rf ~/miniconda3/miniconda.sh
+```
+
+Luego de instalarlo hay que agregar la ruta `export PATH="/home/usr/miniconda3/bin:$PATH"` al PATH del sistema:
+
+```bash
+usr@hostname:~$ .bashrc
+usr@hostname:~$ source ~/.bashrc
+```
+
+Una vez instalado miniconda, se debe crear un enviroment con la version de Python 3.7 32bits y activarlo:
+
+```bash
+(base) usr@hostname:~$ conda create -n py32 python=3.7 -c https://repo.anaconda.com/pkgs/main/linux-32/ --override-channels
+(py32) usr@hostname:~$ conda activate py32
+```
+
+Podemos corroborar que nuestro enviroment esta bien configurado ejecutando el siguiente comando:
+
+```bash
+(py32) usr@hostname:~$ python -c "import platform; print(platform.architecture())"
+('32bit', 'ELF')
+```
 
 ## Requerimientos
 
+### Librerias
 Para poder ejecutar el programa se necesita tener instalado Python 3.7+ y GCC para poder compilar la libreria en C. Para la segunda etapa del proyecto se necesita tener instalado gdb y nasm para poder compilar el codigo en assembler. Aun que estas herramientas estan instaladas por defecto en la mayoria de los sistemas operativos, se puede instalar con los siguientes comandos:
 
 ```bash
@@ -33,24 +66,24 @@ Para poder ejecutar el programa se necesita tener instalado Python 3.7+ y GCC pa
 Las librerias de python necesarias `ctypes`, `tkinter`, `json`, `matplot` `request` son modulos que vienen por defecto en la instalacion de Python. Pero si no estan instalados se pueden instalar con los siguientes comandos:
 
 ```bash
-~$ pip3 install requests
-~$ pip3 install json
-~$ pip3 install ctypes
-~$ pip3 install tkinter
-~$ pip3 install matplotlib
+pip3 install requests
+pip3 install json
+pip3 install ctypes
+pip3 install tkinter
+pip3 install matplotlib
 ```
 
 En caso de que falle la instalación de la librería tkinter, se puede probar en sistemas operativos basados en Debian el siguiente comando:
 
 ```bash
-~$ sudo apt install python3-tk
+sudo apt install python3-tk
 ```
 
 ---
 
 ## Ejecucion
 
-En esta primera parte de la implementacion solamente se utilizo Python y una libreria un C, mediante ctypes, para realizar la conversion de float a entero. Para ejecutar el programa se debe correr el siguiente comando desde la carpeta root del proyecto.
+Para la segunda parte de la implementacion se utilizo Python y una libreria un C, mediante ctypes, la cual luego llama a una rutina de assembler para realizar la conversion de float a entero, y sumarle uno. Para ejecutar el programa se debe correr el siguiente comando desde la carpeta root del proyecto.
 
 ```bash
 ~/sdc_tp2$ sh build.sh
@@ -165,9 +198,14 @@ Como podemos observar los tiempos de ejecucion de la funcion en C es mayor que l
 
 ---
 ## TO DO
-Para la segunda parte del informe se buscara implementar la conversion de float a entero en ensamblador, y se comparara el rendimiento de la aplicacion con la conversion en C y en Python.
+
+Unit tests:
+- Profiling de Python con C y Assembler.
+- Test de validacion de datos de la API
+- Validacion de sistema y de usuario
 
 ---
 ## Informacion externa utilizada
 
 - [World countries json](https://github.com/stefangabos/world_countries/tree/master)
+- [Miniconda](https://docs.anaconda.com/free/miniconda/)
