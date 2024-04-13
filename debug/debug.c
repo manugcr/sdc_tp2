@@ -2,7 +2,7 @@
 
 extern int gini_manipulation_asm(float gini_index);
 
-int main(int argc, char argv[]) 
+int main() 
 {
     float gini_index = 42.3;
     int result;
