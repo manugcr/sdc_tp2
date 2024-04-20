@@ -55,6 +55,12 @@ Podemos corroborar que nuestro enviroment esta bien configurado ejecutando el si
 ('32bit', 'ELF')
 ```
 
+Puede ser que tengamos problemas a la hora de instalar las librerias con pip en el nuevo enviroment, para eso hay que actualizar pip con alguno de estos comandos:
+```bash
+conda update pip
+python -m pip install --upgrade pip
+```
+
 ### Librerias
 Para poder ejecutar el programa se necesita tener instalado Python 3.7+ y GCC para poder compilar la libreria en C. Para la segunda etapa del proyecto se necesita tener instalado gdb y nasm para poder compilar el codigo en assembler. Aun que estas herramientas estan instaladas por defecto en la mayoria de los sistemas operativos, se puede instalar con los siguientes comandos:
 
